@@ -540,7 +540,14 @@ export function renderSetting() {
 
     // private data
     $('#custom_api_url').val(USER.IMPORTANT_USER_PRIVACY_DATA.custom_api_url || '');
-    $('#custom_api_key').val(USER.IMPORTANT_USER_PRIVACY_DATA.custom_api_key || '');
+   const currentApiKey = USER.IMPORTANT_USER_PRIVACY_DATA.custom_api_key || '';
+// 如果是旧版本的加密数据，显示提示而不是乱码
+if (currentApiKey && isLegacyEncryptedData(currentApiKey)) {
+    $('#custom_api_key').val('');
+    $('#custom_api_key').attr('placeholder', '请重新设置API密钥以支持跨设备使用');
+} else {
+    $('#custom_api_key').val(currentApiKey);
+}
     $('#custom_model_name').val(USER.IMPORTANT_USER_PRIVACY_DATA.custom_model_name || '');
     $('#table_proxy_address').val(USER.IMPORTANT_USER_PRIVACY_DATA.table_proxy_address || '');
     $('#table_proxy_key').val(USER.IMPORTANT_USER_PRIVACY_DATA.table_proxy_key || '');
