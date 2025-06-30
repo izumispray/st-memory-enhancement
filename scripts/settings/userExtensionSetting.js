@@ -8,6 +8,7 @@ import {initRefreshTypeSelector} from "../runtime/absoluteRefresh.js";
 import {rollbackVersion} from "../../services/debugs.js";
 import {customSheetsStylePopup} from "../editor/customSheetsStyle.js";
 import {openAppHeaderTableDrawer} from "../renderer/appHeaderTableBaseDrawer.js";
+import { processApiKey, isLegacyEncryptedData } from './standaloneAPI.js';
 
 /**
  * 格式化深度设置
