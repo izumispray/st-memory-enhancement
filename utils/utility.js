@@ -99,8 +99,11 @@ export function generateUid() {
 }
 
 export function generateDeviceId() {
-    // 返回固定的设备ID，移除设备绑定限制，实现跨设备使用
-    return 'st-universal-device-2024';
+    let deviceId = localStorage.getItem('st_device_id') || generateUid();
+    if (!localStorage.getItem('st_device_id')) {
+        localStorage.setItem('st_device_id', deviceId);
+    }
+    return deviceId;
 }
 
 
@@ -154,4 +157,3 @@ export async function calculateStringHash(string) {
 
     return hashHex;
 }
-
