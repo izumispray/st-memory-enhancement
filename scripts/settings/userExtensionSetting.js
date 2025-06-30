@@ -376,26 +376,34 @@ function InitBinging() {
 
 
     // API URL
-    $('#custom_api_url').on('input', function() {
-        USER.IMPORTANT_USER_PRIVACY_DATA.custom_api_url = $(this).val();
+    // 在 userExtensionSetting.js 文件中，找到这个部分并修改：
+
+// API URL
+$('#custom_api_url').on('input', function() {
+    USER.IMPORTANT_USER_PRIVACY_DATA.custom_api_url = $(this).val();
+    USER.saveSettings && USER.saveSettings(); // 保存设置
+});
+
+// API Key (修改这个部分)
+$('#custom_api_key').on('input', SYSTEM.debounce(function() {
+    try {
+        const rawKey = $(this).val();
+        if (!rawKey.trim()) {
+            USER.IMPORTANT_USER_PRIVACY_DATA.custom_api_key = '';
+            USER.saveSettings && USER.saveSettings();
+            return;
+        }
+        
+        // 使用新的processApiKey函数（移除了deviceId参数）
+        const result = processApiKey(rawKey);
+        USER.IMPORTANT_USER_PRIVACY_DATA.custom_api_key = result.processedKey;
         USER.saveSettings && USER.saveSettings(); // 保存设置
-    });
-    // API KEY
-    let apiKeyDebounceTimer;
-    $('#custom_api_key').on('input', function () {
-        clearTimeout(apiKeyDebounceTimer);
-        apiKeyDebounceTimer = setTimeout(async () => {
-            try {
-                const rawKey = $(this).val();
-                const result = processApiKey(rawKey, generateDeviceId());
-                USER.IMPORTANT_USER_PRIVACY_DATA.custom_api_key = result.encryptedResult.encrypted || result.encryptedResult;
-                USER.saveSettings && USER.saveSettings(); // 保存设置
-                EDITOR.success(result.message);
-            } catch (error) {
-                console.error('API Key 处理失败:', error);
-                EDITOR.error('未能获取到API KEY，请重新输入~');
-            }
-        }, 500); // 500ms防抖延迟
+        EDITOR.success(result.message);
+    } catch (error) {
+        console.error('API Key 处理失败:', error);
+        EDITOR.error('未能获取到API KEY，请重新输入~');
+    }
+}, 500)); // 500ms防抖延迟
     })
     // 模型名称
     $('#custom_model_name').on('input', function() {
